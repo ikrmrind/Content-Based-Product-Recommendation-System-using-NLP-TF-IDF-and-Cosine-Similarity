@@ -1,0 +1,119 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ShopSense — AI Product Recommender</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07060f;--card:#ffffff0d;--line:#ffffff1a;--tx:#f3f1ff;--mu:#9d99bd;--a:#8b5cf6;--b:#ec4899;--c:#22d3ee}
+*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font:15px Inter,system-ui,sans-serif;overflow-x:hidden}
+h1,h2,h3,.logo{font-family:Sora,sans-serif}
+.aurora{position:fixed;inset:0;z-index:-1;filter:blur(90px);opacity:.55}
+.aurora i{position:absolute;border-radius:50%;animation:fl 18s ease-in-out infinite alternate}
+.aurora i:nth-child(1){width:520px;height:520px;background:var(--a);top:-120px;left:-80px}
+.aurora i:nth-child(2){width:460px;height:460px;background:var(--b);top:30%;right:-120px;animation-delay:-6s}
+.aurora i:nth-child(3){width:420px;height:420px;background:var(--c);bottom:-120px;left:30%;animation-delay:-11s}
+@keyframes fl{to{transform:translate(70px,50px) scale(1.15)}}
+nav{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px 5vw;backdrop-filter:blur(18px);background:#07060fb3;border-bottom:1px solid var(--line)}
+.logo{font-weight:800;font-size:22px}.logo b{background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;color:transparent}
+nav a{color:var(--mu);text-decoration:none;margin-left:24px;font-weight:500}nav a:hover{color:#fff}
+.heart-count{background:linear-gradient(90deg,var(--a),var(--b));border-radius:99px;padding:4px 12px;color:#fff!important}
+.hero{text-align:center;padding:80px 5vw 30px}
+.pill{display:inline-block;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 16px;color:var(--c);font-size:13px;margin-bottom:22px}
+h1{font-size:clamp(38px,6.5vw,78px);line-height:1.05;font-weight:800;letter-spacing:-2px}
+h1 span{background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webkit-background-clip:text;color:transparent;background-size:200%;animation:sh 6s linear infinite}
+@keyframes sh{to{background-position:200%}}
+.hero p{color:var(--mu);max-width:620px;margin:20px auto 32px;font-size:17px;line-height:1.6}
+.search{position:relative;max-width:640px;margin:auto}
+.search input{width:100%;padding:18px 24px;border-radius:99px;border:1px solid var(--line);background:#ffffff12;color:#fff;font-size:16px;outline:none;backdrop-filter:blur(10px)}
+.search input:focus{border-color:var(--a);box-shadow:0 0 0 4px #8b5cf633}
+.sug{position:absolute;left:0;right:0;top:64px;background:#14122a;border:1px solid var(--line);border-radius:20px;overflow:hidden;text-align:left;z-index:15}
+.sug div{display:flex;gap:12px;align-items:center;padding:10px 16px;cursor:pointer}.sug div:hover{background:#ffffff12}
+.sug img{width:40px;height:40px;object-fit:contain;background:#fff;border-radius:8px}
+.marq{overflow:hidden;margin:50px 0 10px;mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.track{display:flex;gap:18px;width:max-content;animation:mq 50s linear infinite}.marq:hover .track{animation-play-state:paused}
+.track img{width:130px;height:130px;object-fit:contain;background:#fff;border-radius:22px;padding:10px;cursor:pointer;transition:.3s}
+.track img:hover{transform:translateY(-8px) scale(1.08)}
+@keyframes mq{to{transform:translateX(-50%)}}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;padding:30px 5vw}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;text-align:center}
+.stat b{display:block;font:800 34px Sora;background:linear-gradient(90deg,var(--a),var(--c));-webkit-background-clip:text;color:transparent}
+.stat small{color:var(--mu)}
+section{padding:50px 5vw}h2{font-size:34px;letter-spacing:-1px;margin-bottom:6px}.sub{color:var(--mu);margin-bottom:26px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:26px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--mu);padding:8px 16px;border-radius:99px;cursor:pointer;font:500 14px Inter;transition:.2s}
+.chip:hover{color:#fff}.chip.on{background:linear-gradient(90deg,var(--a),var(--b));color:#fff;border-color:transparent}
+select{margin-left:auto;background:#14122a;color:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden;cursor:pointer;position:relative;transition:.35s;animation:up .5s both}
+.card:hover{transform:translateY(-8px) rotate(-.4deg);border-color:var(--a);box-shadow:0 20px 50px #8b5cf640}
+@keyframes up{from{opacity:0;transform:translateY(24px)}}
+.im{background:#fff;aspect-ratio:1;display:flex;align-items:center;justify-content:center}.im img{width:100%;height:100%;object-fit:contain;padding:12px;transition:.4s}.card:hover .im img{transform:scale(1.07)}
+.info{padding:14px}.info small{color:var(--c);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.5px}
+.info h3{font:600 14px/1.35 Inter;margin:5px 0 8px;height:38px;overflow:hidden}.meta{display:flex;justify-content:space-between;color:var(--mu);font-size:13px}.star{color:#fbbf24}
+.fav{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;border:0;background:#0009;color:#fff;font-size:16px;cursor:pointer;backdrop-filter:blur(6px)}.fav.on{color:var(--b)}
+.more{display:block;margin:34px auto 0;padding:14px 34px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:#fff;cursor:pointer;font:600 15px Inter}.more:hover{border-color:var(--a)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:24px}.step em{font:800 40px Sora;color:#ffffff22}.step h3{margin:6px 0}.step p{color:var(--mu);font-size:14px;line-height:1.5}
+#dr{position:fixed;inset:0;z-index:50;background:#000a;backdrop-filter:blur(8px);display:none;justify-content:flex-end}#dr.open{display:flex}
+.panel{width:min(980px,100%);background:#0e0c1e;overflow:auto;padding:30px;animation:sl .35s}@keyframes sl{from{transform:translateX(60px);opacity:0}}
+.x{float:right;background:var(--card);border:1px solid var(--line);color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:18px}
+.det{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:34px}@media(max-width:760px){.det{grid-template-columns:1fr}}
+.big{background:#fff;border-radius:24px;aspect-ratio:1}.big img{width:100%;height:100%;object-fit:contain;padding:20px}
+.th{display:flex;gap:8px;margin-top:10px}.th img{width:62px;height:62px;object-fit:contain;background:#fff;border-radius:12px;cursor:pointer;opacity:.6;padding:4px}.th img:hover{opacity:1}
+.det h2{font-size:26px;margin:8px 0 12px}.det p{color:var(--mu);line-height:1.6;margin-top:14px}
+.badge{display:inline-block;background:#8b5cf633;color:#c4b5fd;border-radius:99px;padding:4px 12px;font-size:12px;margin-right:6px}
+.rec{position:relative}.score{position:absolute;left:10px;top:10px;background:linear-gradient(90deg,var(--a),var(--b));border-radius:99px;padding:3px 10px;font:700 12px Sora;z-index:2}
+footer{text-align:center;color:var(--mu);padding:40px;border-top:1px solid var(--line)}
+</style></head><body>
+<div class="aurora"><i></i><i></i><i></i></div>
+<nav><div class="logo">Shop<b>Sense</b></div><div><a href="#shop">Shop</a><a href="#how">How it works</a><a class="heart-count" href="#" onclick="showFavs();return false">♥ <span id="fc">0</span></a></div></nav>
+<header class="hero"><div class="pill">✦ Content-based AI · TF-IDF + Cosine Similarity</div>
+<h1>Find products you'll <span>actually love</span></h1>
+<p>Pick any product and our recommendation engine instantly finds the most similar items from thousands of beauty &amp; personal-care products.</p>
+<div class="search"><input id="q" placeholder="Search e.g. OPI nail polish, Maybelline, shampoo…" autocomplete="off"><div id="sug" class="sug" hidden></div></div>
+<div class="marq"><div class="track" id="trk"></div></div></header>
+<div class="stats" id="stats"></div>
+<section id="shop"><h2>Explore the catalog</h2><p class="sub" id="cnt">Click any product to see AI-powered recommendations</p>
+<div class="bar" id="chips"></div><div class="grid" id="grid"></div><button class="more" id="more">Load more</button></section>
+<section id="how"><h2>How the engine works</h2><p class="sub">From raw text to recommendations in four steps</p><div class="steps">
+<div class="step"><em>01</em><h3>Clean</h3><p>Product tags are lowercased, stripped of punctuation and stopwords, then lemmatized with NLTK.</p></div>
+<div class="step"><em>02</em><h3>Vectorize</h3><p>TF-IDF with unigrams + bigrams turns every product into a 10,000-dimension vector.</p></div>
+<div class="step"><em>03</em><h3>Compare</h3><p>Cosine similarity measures the angle between the chosen product and every other product.</p></div>
+<div class="step"><em>04</em><h3>Recommend</h3><p>The top matches are returned with a similarity score and shown visually with their images.</p></div></div></section>
+<footer>Built with Python · Flask · scikit-learn · Pandas — ShopSense Recommender Project</footer>
+<div id="dr" onclick="if(event.target==this)closeDr()"><div class="panel" id="pn"></div></div>
+<script>
+const $=s=>document.querySelector(s),PH="data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#eee"/><text x="50" y="58" font-size="30" text-anchor="middle" fill="#bbb">🛍</text></svg>');
+const im=(u,w=360)=>u?u+'?odnHeight='+w+'&odnWidth='+w+'&odnBg=FFFFFF':PH,fb="this.onerror=null;this.src=PH";
+let st={cat:'All',sort:'popular',page:1,q:''},favs=JSON.parse(localStorage.getItem('favs')||'[]'),C={};
+const stars=r=>r?`<span class="star">★</span> ${r.toFixed(1)}`:'<span style="opacity:.5">No rating</span>';
+const card=(p,i=0,rec)=>{C[p.id]=p;return `<div class="card ${rec?'rec':''}" style="animation-delay:${i*40}ms" onclick="openP(${p.id})">${rec?`<div class="score">${p.score}% match</div>`:''}<button class="fav ${favs.includes(p.id)?'on':''}" onclick="event.stopPropagation();fav(${p.id},this)">♥</button><div class="im"><img loading="lazy" src="${im(p.img)}" onerror="${fb}"></div><div class="info"><small>${p.brand||p.cat}</small><h3>${p.name}</h3><div class="meta"><span>${stars(p.rating)}</span><span>${p.reviews?p.reviews.toLocaleString()+' reviews':''}</span></div></div></div>`};
+function fav(id,b){favs=favs.includes(id)?favs.filter(x=>x!=id):[...favs,id];localStorage.setItem('favs',JSON.stringify(favs));b.classList.toggle('on');$('#fc').textContent=favs.length}
+async function load(reset){if(reset){st.page=1;$('#grid').innerHTML=''}
+ const r=await(await fetch(`/api/products?q=${encodeURIComponent(st.q)}&cat=${encodeURIComponent(st.cat)}&sort=${st.sort}&page=${st.page}`)).json();
+ $('#grid').insertAdjacentHTML('beforeend',r.items.map((p,i)=>card(p,i)).join(''));
+ $('#cnt').textContent=r.total.toLocaleString()+' products — click any one to see AI recommendations';
+ $('#more').style.display=st.page*24<r.total?'block':'none'}
+async function openP(id){$('#dr').classList.add('open');document.body.style.overflow='hidden';
+ $('#pn').innerHTML='<p style="color:#9d99bd;padding:40px">Computing similarity…</p>';
+ const {product:p,recs}=await(await fetch('/api/product/'+id)).json();
+ $('#pn').innerHTML=`<button class="x" onclick="closeDr()">✕</button><div class="det"><div><div class="big"><img id="bi" src="${im(p.imgs[0],700)}" onerror="${fb}"></div><div class="th">${p.imgs.map(u=>`<img src="${im(u,120)}" onclick="$('#bi').src='${im(u,700)}'" onerror="${fb}">`).join('')}</div></div>
+ <div><span class="badge">${p.cat}</span>${p.brand?`<span class="badge">${p.brand}</span>`:''}<h2>${p.name}</h2><div style="font-size:18px">${stars(p.rating)} <span style="color:#9d99bd;font-size:14px">${p.reviews.toLocaleString()} reviews</span></div><p>${p.desc||'No description available for this product.'}</p></div></div>
+ <h2>✦ Recommended for you</h2><p class="sub">Most similar products by TF-IDF cosine similarity</p><div class="grid">${recs.map((r,i)=>card(r,i,1)).join('')}</div>`;$('#pn').scrollTop=0}
+function closeDr(){$('#dr').classList.remove('open');document.body.style.overflow=''}
+function showFavs(){const l=favs.map(i=>C[i]).filter(Boolean);$('#shop').scrollIntoView();$('#grid').innerHTML=l.length?l.map((p,i)=>card(p,i)).join(''):'<p class="sub">Tap ♥ on products to save them here.</p>';$('#more').style.display='none';$('#cnt').textContent='Your saved products'}
+document.addEventListener('keydown',e=>e.key=='Escape'&&closeDr());
+let tm;$('#q').oninput=e=>{clearTimeout(tm);const v=e.target.value;tm=setTimeout(async()=>{if(v.length<2){$('#sug').hidden=true;return}
+ const r=await(await fetch('/api/suggest?q='+encodeURIComponent(v))).json();$('#sug').hidden=!r.length;
+ $('#sug').innerHTML=r.map(p=>{C[p.id]=p;return `<div onclick="openP(${p.id});$('#sug').hidden=true"><img src="${im(p.img,80)}" onerror="${fb}"><span>${p.name}</span></div>`}).join('')},200)};
+$('#q').onkeydown=e=>{if(e.key=='Enter'){st.q=e.target.value;$('#sug').hidden=true;load(1);$('#shop').scrollIntoView()}};
+$('#more').onclick=()=>{st.page++;load()};
+async function init(){$('#fc').textContent=favs.length;const s=await(await fetch('/api/stats')).json();
+ const cnt=[['products','Products'],['brands','Brands'],['reviews','Reviews'],['avg_rating','Avg rating'],['features','TF-IDF features']];
+ $('#stats').innerHTML=cnt.map(([k,l])=>`<div class="stat"><b data-v="${s[k]}">0</b><small>${l}</small></div>`).join('');
+ document.querySelectorAll('.stat b').forEach(b=>{const v=+b.dataset.v;let t=0;const f=()=>{t+=.04;const x=Math.min(t,1);b.textContent=(v*(1-Math.pow(1-x,3))).toFixed(v%1?2:0).replace(/\B(?=(\d{3})+(?!\d))/g,',');if(x<1)requestAnimationFrame(f)};f()});
+ const h=s.hero.map(p=>{C[p.id]=p;return `<img src="${im(p.img,260)}" onclick="openP(${p.id})" onerror="${fb}">`}).join('');$('#trk').innerHTML=h+h;
+ $('#chips').innerHTML=['All',...Object.keys(s.cats)].map(c=>`<button class="chip ${c=='All'?'on':''}" onclick="st.cat='${c.replace(/'/g,"\\'")}';document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x==this));load(1)">${c}</button>`).join('')+
+ `<select onchange="st.sort=this.value;load(1)"><option value="popular">Most popular</option><option value="rating">Top rated</option><option value="reviews">Most reviewed</option></select>`;
+ load(1)}
+init();
+</script></body></html>
