@@ -11,6 +11,9 @@
 
 ---
 
+<img width="824" height="506" alt="image" src="https://github.com/user-attachments/assets/de93688c-fd81-4d02-b135-2ff066da9c12" />
+
+
 ## ✨ Features
 
 - 🔍 **Live Search** — Instantly search across 4,090 products as you type
